@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jenni's Website</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="container-fluid">
+		<div>
+			<h2 id="welcome-heading">Welcome to Jenni's World</h2>
+		</div>
+		<div id="profile-section" class="profile-section">
+			<div class="row">
+				<div class="profile-image col-xs-4">
+					<img src="me.jpg" alt="Profile Picture" width="200">
+				</div>
+				<div class="profile-info col-xs-8">
+					<div>
+						<span id="profile-heading">Hi! I'm a new grad student from CSUF MSCS. <br>
+													With a passion for technology and a drive to solve real-world challenges, <br>
+													I'm constantly seeking opportunities to grow and make a positive impact <br>
+													in the field of computer science. See you soon! <br> <br>   </span>
+					</div>
+					<div class="profile-item">
+						<i class="fas fa-user"></i>
+						<span id="profile-name"></span>
+					</div>
+					<div class="profile-item">
+						<i class="fas fa-phone"></i>
+						<span id="profile-phone"></span>
+					</div>
+					<div class="profile-item">
+						<i class="fas fa-home"></i>
+						<span id="profile-address"></span>
+					</div>
+					<div class="profile-item">
+						<i class="fab fa-linkedin"></i>
+						<span id="profile-linkedin"></span>
+					</div>
+					<div class="profile-item">
+						<i class="fab fa-github"></i>
+						<span id="profile-github"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="button-section">
+			<h2 id="second_heading">About Jenni</h2>
+			<button id="work-button" class="btn btn-primary">Work</button>
+			<button id="education-button" class="btn btn-primary">Education</button>
+			<button id="project-button" class="btn btn-primary">Project</button>
+			<button id="skill-button" class="btn btn-primary">Skill</button>
+		</div>
+		
+		<div id="content-section">
+			<table id="work-table" style="display: none;"></table>
+			<table id="education-table" style="display: none;"></table>
+			<table id="project-table" style="display: none;"></table>
+			<table id="skill-table" style="display: none;"></table>
+		</div>
+	</div>
+
+	<style>
+		@keyframes bumpAnimation {
+			0% {
+				transform: translateX(-100%);
+			}
+			50% {
+				transform: translateX(50%);
+			}
+			100% {
+				transform: translateX(0);
+			}
+		}
+		
+		#welcome-heading {
+			animation: bumpAnimation 1s ease-in-out;
+			transition: transform 0.5s;
+		}
+
+		#welcome-heading:hover {
+			transform: scale(1.5);
+		}
+		
+		#profile-heading, #second_heading{
+			font-family: "Amatic SC", cursive;
+		}
+
+		#welcome-heading {
+			font-family: "Amatic SC", cursive;
+			font-size: 48px;
+			animation: bumpAnimation 1s ease-in-out;
+			transition: transform 0.5s;
+			margin-top: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+		}
+
+		#content-section, .profile-section {
+			margin-top: 20px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		#profile-section {
+			background-color: #f9f9f9;
+			padding: 20px;
+			border-radius: 5px;
+			margin-bottom: 20px;
+		}
+		
+		.profile-image img {
+			border-radius: 50%; /* Apply elliptical border radius */
+			width: 200px; /* Set the width of the profile image */
+			margin-right: 50px;
+		}
+		
+		.profile-info {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+		}
+		
+		.profile-item {
+			margin-bottom: 10px;
+			display: flex;
+			align-items: center;
+		}
+		
+		.profile-item i {
+			margin-right: 10px;
+		}
+		
+		.profile-item span {
+			margin-left: 10px; /* Add left margin for the text */
+			flex-grow: 1; /* Expand to take available space */
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+		
+		#button-section {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+		
+		#button-section h2 {
+			margin-bottom: 10px;
+		}
+		
+		#button-section button {
+			margin-right: 10px;
+		}
+		
+		#skill-table, #project-table, #education-table, #work-table {
+		  border-collapse: collapse;
+		  border: 1px solid #ccc;
+		}
+
+		#skill-table th, #skill-table td, #project-table th, #project-table td, #education-table th, #education-table td, #work-table th, #work-table td {
+		  border: 1px solid #ccc;
+		  padding: 8px;
+		}
+		
+		#skill-table th, #project-table th, #education-table th, #work-table th {
+		  background-color: #f2f2f2;
+		}
+
+		#skill-table tr:hover, #project-table tr:hover, #education-table tr:hover, #work-table tr:hover {
+		  background-color: #dcecff;
+		}
+
+	</style>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		// Fetch and display profile information
+		$(document).ready(function() {
+			$.ajax({
+				url: "fetch_profile.php",
+				type: "GET",
+				dataType: "json",
+				success: function(response) {
+					$("#profile-name").text(response.name);
+					$("#profile-phone").text(response.phone);
+					$("#profile-address").text(response.address);
+					$("#profile-linkedin").html(`<a href="${response.linkedin}" target="_blank">${response.linkedin}</a>`);
+					$("#profile-github").html(`<a href="${response.github}" target="_blank">${response.github}</a>`);
+				},
+				error: function() {
+					alert("Error occurred while fetching profile information.");
+				}
+			});
+			
+			// Event handler for work button click
+			$("#work-button").click(function() {
+				$("#content-section table").hide();
+				fetchWorkData();
+			});
+			
+			// Event handler for education button click
+			$("#education-button").click(function() {
+				$("#content-section table").hide();
+				fetchEducationData();
+			});
+			
+			// Event handler for project button click
+			$("#project-button").click(function() {
+				$("#content-section table").hide();
+				fetchProjectData();
+			});
+			
+			// Handle tool button click
+			$("#skill-button").click(function() {
+				$("#content-section table").hide();
+				// Define the tool data
+				var toolData = {
+					"Programming Languages": ["Python", "SQL", "C++", "PHP", "JavaScript"],
+					"Frameworks & Tools": ["Docker", "Airflow", "Django", "HTML/CSS", "Bootstrap", "MySQL", "MS SQL", "PostgreSQL"],
+					"Cloud Service": ["AWS", "EC2", "Redshift", "Elastic Search", "S3", "DynamoDB"],
+					"Machine Learning Libraries": ["NumPy", "Pandas", "Matplotlib", "TensorFlow", "Keras", "Scikit-learn", "OpenCV"]
+				};
+
+				// Get the tool table element
+				var table = $("#skill-table");
+
+				// Clear any existing table data
+				table.empty();
+
+				// Create table headers
+				var headers = "<tr><th>Category</th><th>Tools</th></tr>";
+				table.append(headers);
+
+				// Populate the table with tool data
+				for (var category in toolData) {
+					var tools = toolData[category];
+					var row = "<tr><td>" + category + "</td><td>" + tools.join(", ") + "</td></tr>";
+					table.append(row);
+				}
+
+				// Show the tool table
+				table.show();
+    });
+		});
+
+		// Function to fetch work data
+		function fetchWorkData() {
+			$.ajax({
+				url: "fetch_work_data.php",
+				type: "GET",
+				dataType: "json",
+				success: function(response) {
+					displayWorkData(response);
+				},
+				error: function() {
+					alert("Error occurred while fetching work data.");
+				}
+			});
+		}
+
+		// Function to display work data in the table
+		function displayWorkData(data) {
+		  var table = $("#work-table");
+		  table.empty();
+
+		  // Create table headers
+		  var headers = "<tr><th>Company</th><th>Position</th><th>City</th><th>Country</th><th>Start Date</th><th>End Date</th><th colspan='4'>Description</th><th colspan='3'>Tools</th></tr>";
+		  table.append(headers);
+
+		  // Create table rows with work data
+		  data.forEach(function(item) {
+			var startDate = formatDate(item.start_date);
+			var endDate = formatDate(item.end_date);
+
+			var row = "<tr>";
+			row += "<td>" + item.company + "</td>";
+			row += "<td>" + item.position + "</td>";
+			row += "<td>" + item.city + "</td>";
+			row += "<td>" + item.country + "</td>";
+			row += "<td>" + startDate + "</td>";
+			row += "<td>" + endDate + "</td>";
+			row += "<td colspan='4'>" + item.description + "</td>";
+			row += "<td colspan='3'>" + item.tools + "</td>";
+			row += "</tr>";
+
+			table.append(row);
+		  });
+
+		  // Show the work table
+		  table.show();
+		}
+		
+		// Function to fetch education data
+		function fetchEducationData() {
+		  $.ajax({
+			url: "fetch_education_data.php",
+			type: "GET",
+			dataType: "json",
+			success: function(response) {
+			  displayEducationData(response);
+			},
+			error: function() {
+			  alert("Error occurred while fetching education data.");
+			}
+		  });
+		}
+
+		// Function to display education data in the table
+		function displayEducationData(data) {
+		  var table = $("#education-table");
+		  table.empty();
+
+		  // Create table headers
+		  var headers = "<tr><th>Institution</th><th>Degree</th><th>Major</th><th>City</th><th>Country</th><th>End Date</th><th colspan='4'>Description</th></tr>";
+		  table.append(headers);
+
+		  // Create table rows with education data
+		  data.forEach(function(item) {
+			var startDate = formatDate(item.start_date);
+			var endDate = formatDate(item.end_date);
+
+			var row = "<tr>";
+			row += "<td>" + item.school + "</td>";
+			row += "<td>" + item.degree + "</td>";
+			row += "<td>" + item.major + "</td>";
+			row += "<td>" + item.city + "</td>";
+			row += "<td>" + item.country + "</td>";
+			row += "<td>" + endDate + "</td>";
+			row += "<td colspan='4'>" + item.description + "</td>";
+			row += "</tr>";
+
+			table.append(row);
+		  });
+
+		  // Show the education table
+		  table.show();
+		}
+
+		// Function to fetch project data
+		function fetchProjectData() {
+		  $.ajax({
+			url: "fetch_project_data.php",
+			type: "GET",
+			dataType: "json",
+			success: function(response) {
+			  displayProjectData(response);
+			},
+			error: function() {
+			  alert("Error occurred while fetching project data.");
+			}
+		  });
+		}
+
+		// Function to display project data in the table
+		function displayProjectData(data) {
+		  var table = $("#project-table");
+		  table.empty();
+
+		  // Create table headers
+		  var headers = "<tr><th>Project</th><th>Project Date</th><th>Description</th><th>Description</th></tr>";
+		  table.append(headers);
+
+		  // Create table rows with project data
+		  data.forEach(function(item) {
+			var projectDate = formatDate(item.project_date);
+
+			var row = "<tr>";
+			row += "<td>" + item.name + "</td>";
+			row += "<td>" + projectDate + "</td>";
+			if (item.project_hightlight !== "") {
+			  row += "<td><strong style='color: red;'>" + item.project_hightlight + "</strong>" + item.description + "</td>";
+			} else {
+			  row += "<td>" + item.description + "</td>";
+			}
+			row += "<td>" + item.tools + "</td>";
+			row += "</tr>";
+
+			table.append(row);
+		  });
+
+		  // Show the project table
+		  table.show();
+		}
+
+
+
+		// Function to format date as yyyy-mm
+		function formatDate(dateString) {
+		  var date = new Date(dateString);
+		  var year = date.getFullYear();
+		  var month = ("0" + (date.getMonth() + 1)).slice(-2);
+		  return year + "-" + month;
+		}
+		
+		
+	</script>
+</body>
+</html>

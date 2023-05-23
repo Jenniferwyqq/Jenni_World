@@ -1,0 +1,162 @@
+    <style>
+        .container-fluid {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #profile-section {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-image img {
+            border-radius: 50%;
+            width: 200px;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .profile-item {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-item i {
+            margin-right: 10px;
+        }
+        
+        .profile-item span {
+            margin-left: 10px;
+            flex-grow: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        
+        #button-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        #content-section {
+            text-align: center;
+        }
+    </style>
+
+<script>
+        $(document).ready(function() {
+            // Load profile data
+            $.ajax({
+                url: "fetch_profile.php",
+                method: "POST",
+                success: function(data) {
+                    var profileData = JSON.parse(data);
+                    $("#profile-name").text(profileData.name);
+                    $("#profile-phone").text(profileData.phone);
+                    $("#profile-address").text(profileData.address);
+                    $("#profile-linkedin").text(profileData.linkedin);
+                    $("#profile-github").text(profileData.github);
+                }
+            });
+
+            // Load work data
+            $("#work-button").click(function() {
+                $.ajax({
+                    url: "fetch_work_data.php",
+                    method: "POST",
+                    success: function(data) {
+                        var workData = JSON.parse(data);
+                        var table = $("#work-table");
+                        table.empty();
+
+                        var header = $("<tr>");
+                        header.append("<th>Company</th>");
+                        header.append("<th>Title</th>");
+                        header.append("<th>Years</th>");
+                        table.append(header);
+
+                        for (var i = 0; i < workData.length; i++) {
+                            var row = $("<tr>");
+                            row.append("<td>" + workData[i].company + "</td>");
+                            row.append("<td>" + workData[i].title + "</td>");
+                            row.append("<td>" + workData[i].years + "</td>");
+                            table.append(row);
+                        }
+
+                        table.show();
+                        $("#education-table").hide();
+                        $("#project-table").hide();
+                    }
+                });
+            });
+
+            // Load education data
+            $("#education-button").click(function() {
+                $.ajax({
+                    url: "fetch_education_data.php",
+                    method: "POST",
+                    success: function(data) {
+                        var educationData = JSON.parse(data);
+                        var table = $("#education-table");
+                        table.empty();
+
+                        var header = $("<tr>");
+                        header.append("<th>University</th>");
+                        header.append("<th>Major</th>");
+                        header.append("<th>Degree</th>");
+                        table.append(header);
+
+                        for (var i = 0; i < educationData.length; i++) {
+                            var row = $("<tr>");
+                            row.append("<td>" + educationData[i].university + "</td>");
+                            row.append("<td>" + educationData[i].major + "</td>");
+                            row.append("<td>" + educationData[i].degree + "</td>");
+                            table.append(row);
+                        }
+
+                        table.show();
+                        $("#work-table").hide();
+                        $("#project-table").hide();
+                    }
+                });
+            });
+
+            // Load project data
+            $("#project-button").click(function() {
+                $.ajax({
+                    url: "fetch_project_data.php",
+                    method: "POST",
+                    success: function(data) {
+                        var projectData = JSON.parse(data);
+                        var table = $("#project-table");
+                        table.empty();
+
+                        var header = $("<tr>");
+                        header.append("<th>Project</th>");
+                        header.append("<th>Description</th>");
+                        table.append(header);
+
+                        for (var i = 0; i < projectData.length; i++) {
+                            var row = $("<tr>");
+                            row.append("<td>" + projectData[i].project + "</td>");
+                            row.append("<td>" + projectData[i].description + "</td>");
+                            table.append(row);
+                        }
+
+                        table.show();
+                        $("#work-table").hide();
+                        $("#education-table").hide();
+                    }
+                });
+            });
+        });
